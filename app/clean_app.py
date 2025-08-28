@@ -98,8 +98,8 @@ def train_model_from_data():
         print("🏃‍♂️ Trenowanie modelu z danych...")
         
         # Wczytaj dane
-        df_2023 = pd.read_csv('../data/halfmarathon_wroclaw_2023__final.csv', sep=';')
-        df_2024 = pd.read_csv('../data/halfmarathon_wroclaw_2024__final(2).csv', sep=';')
+        df_2023 = pd.read_csv('data/halfmarathon_wroclaw_2023__final.csv', sep=';')
+        df_2024 = pd.read_csv('data/halfmarathon_wroclaw_2024__final(2).csv', sep=';')
         df = pd.concat([df_2023, df_2024], ignore_index=True)
         
         # Przygotuj dane
@@ -134,8 +134,8 @@ def train_model_from_data():
         
         # Zapisz model i metadata
         import os
-        os.makedirs('../models', exist_ok=True)
-        joblib.dump(model, '../models/halfmarathon_predictor.pkl')
+        os.makedirs('models', exist_ok=True)
+        joblib.dump(model, 'models/halfmarathon_predictor.pkl')
         
         metadata = {
             'model_type': 'RandomForest',
@@ -145,7 +145,7 @@ def train_model_from_data():
             'features': features
         }
         
-        with open('../models/model_metadata.json', 'w') as f:
+        with open('models/model_metadata.json', 'w') as f:
             json.dump(metadata, f, indent=2)
         
         print(f"✅ Model wytrenowany! MAE: {mae/60:.1f} min, R²: {r2:.3f}")
@@ -155,17 +155,16 @@ def train_model_from_data():
         print(f"❌ Błąd trenowania modelu: {e}")
         return None, None
 
-def load_model():
-    """Ładowanie modelu lub trenowanie nowego jeśli brak"""
+def smart_load_model():
+    """Próbuje załadować model, jeśli nie istnieje - trenuje nowy"""
     try:
-        # Spróbuj załadować istniejący model
-        model = joblib.load('../models/halfmarathon_predictor.pkl')
-        with open('../models/model_metadata.json', 'r') as f:
+        model = joblib.load('models/halfmarathon_predictor.pkl')
+        with open('models/model_metadata.json', 'r') as f:
             metadata = json.load(f)
-        print("✅ Model załadowany z pliku")
+        print("✅ Model załadowany pomyślnie!")
         return model, metadata
-    except Exception as e:
-        print(f"⚠️ Nie można załadować modelu: {e}")
+    except FileNotFoundError:
+        print("⚠️ Nie można załadować modelu: [Errno 2] No such file or directory: 'models/halfmarathon_predictor.pkl'")
         print("🔄 Trenowanie nowego modelu...")
         return train_model_from_data()
 
@@ -340,7 +339,7 @@ def main():
     with st.sidebar:
         st.markdown("### 📊 Informacje o Modelu")
         
-        model, metadata = load_model()
+        model, metadata = smart_load_model()
         if metadata:
             st.markdown(f"""
             <div class="model-stats">
@@ -472,7 +471,7 @@ def main():
     # 🎨 OBRAZEK NA KOŃCU - zawsze widoczny
     st.markdown("---")
     try:
-        st.image("images/running_legs.jpg", use_container_width=True, caption="Energia biegu! 🏃‍♂️💨")
+        st.image("app/images/running_legs.jpg", width=200, use_container_width=True, caption="Energia biegu! 🏃‍♂️💨")
     except:
         pass
 
