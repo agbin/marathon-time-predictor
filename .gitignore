@@ -13,5 +13,9 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+# 🤖 Models (za duże dla GitHub - 100MB limit)
+*.pkl
+*.joblib
+
 # 📝 Logs
 *.log
