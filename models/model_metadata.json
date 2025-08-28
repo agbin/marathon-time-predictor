@@ -1,0 +1,22 @@
+{
+  "model_type": "RandomForest",
+  "features": [
+    "age",
+    "gender_encoded",
+    "pace_5km_seconds",
+    "pace_10km_seconds"
+  ],
+  "mae_minutes": 2.997643688027198,
+  "r2_score": 0.9506764752283715,
+  "training_data_size": 14320,
+  "feature_ranges": {
+    "age": [
+      17,
+      80
+    ],
+    "pace_5km_seconds": [
+      181,
+      592
+    ]
+  }
+}
