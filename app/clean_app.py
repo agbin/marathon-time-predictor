@@ -249,7 +249,7 @@ def parse_user_data(user_input):
 
 def predict_time(age, gender, pace_5km):
     """Przewidywanie czasu"""
-    model, metadata = load_model()
+    model, metadata = smart_load_model()
     if not model:
         return None, "Model nie został załadowany"
     
@@ -352,7 +352,7 @@ def main():
         
         st.markdown("### 🎯 Jak to działa?")
         st.markdown("""
-        1. **Opisz się** - napisz o swoim wieku, płci i tempie biegowym
+        1. **Opisz się** - napisz o swoim wieku, płci i tempie biegowym najlepiej na 5km
         2. **AI analizuje** - OpenAI wyłuskuje kluczowe dane
         3. **Model przewiduje** - RandomForest oblicza Twój czas
         4. **Otrzymujesz wynik** - wraz z analizą i porównaniami
