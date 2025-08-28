@@ -101,8 +101,8 @@ def main():
     print("\n📊 Wczytywanie danych z separatorem ';'...")
     
     try:
-        df_2023 = pd.read_csv('../data/halfmarathon_wroclaw_2023__final.csv', sep=';')
-        df_2024 = pd.read_csv('../data/halfmarathon_wroclaw_2024__final(2).csv', sep=';')
+        df_2023 = pd.read_csv('data/halfmarathon_wroclaw_2023__final.csv', sep=';')
+        df_2024 = pd.read_csv('data/halfmarathon_wroclaw_2024__final(2).csv', sep=';')
         
         print(f"📈 Dane 2023: {df_2023.shape[0]} rekordów, {df_2023.shape[1]} kolumn")
         print(f"📈 Dane 2024: {df_2024.shape[0]} rekordów, {df_2024.shape[1]} kolumn")
@@ -212,7 +212,7 @@ def main():
     print("\n💾 Zapisywanie modelu...")
     
     # Zapisz model
-    model_path = '../models/halfmarathon_predictor.pkl'
+    model_path = 'models/halfmarathon_predictor.pkl'
     joblib.dump(best_model, model_path)
     print(f"✅ Model zapisany: {model_path}")
     
@@ -229,7 +229,7 @@ def main():
         }
     }
     
-    metadata_path = '../models/model_metadata.json'
+    metadata_path = 'models/model_metadata.json'
     with open(metadata_path, 'w') as f:
         json.dump(model_metadata, f, indent=2)
     
