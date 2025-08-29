@@ -76,11 +76,11 @@ def load_model():
     """Smart model loading - ładuje lub trenuje jeśli trzeba"""
     
     # KROK 1: SPRAWDŹ CZY MODEL ISTNIEJE
-    if os.path.exists('../models/halfmarathon_predictor.pkl'):
+    if os.path.exists('models/halfmarathon_predictor.pkl'):
         # Model istnieje - załaduj normalnie
         try:
             print("📂 Ładowanie istniejącego modelu...")
-            model = joblib.load('../models/halfmarathon_predictor.pkl')
+            model = joblib.load('models/halfmarathon_predictor.pkl')
             metadata = {
                 'model_type': 'RandomForest',
                 'r2_score': 0.95,
@@ -104,15 +104,15 @@ def load_model():
         print(f"📂 Parent directory exists: {os.path.exists('..')}")
         if os.path.exists('..'):
             print(f"📂 Files in parent dir: {os.listdir('..')}")
-        print(f"📂 Notebooks path exists: {os.path.exists('../notebooks')}")
-        if os.path.exists('../notebooks'):
-            print(f"📂 Files in notebooks: {os.listdir('../notebooks')}")
-        print(f"📂 train_model.py exists: {os.path.exists('../notebooks/train_model.py')}")
+        print(f"📂 Notebooks path exists: {os.path.exists('notebooks')}")
+        if os.path.exists('notebooks'):
+            print(f"📂 Files in notebooks: {os.listdir('notebooks')}")
+        print(f"📂 train_model.py exists: {os.path.exists('notebooks/train_model.py')}")
         
         try:
             # KROK 3: IMPORT I WYWOŁANIE TRAIN_MODEL.PY
             import sys
-            sys.path.append('../notebooks')  # Dodaj ścieżkę do notebooks (z app/ do notebooks/)
+            sys.path.append('notebooks')  # Dodaj ścieżkę do notebooks (z /workspace do notebooks/)
             import train_model            # Zaimportuj nasz skrypt trenowania
             
             # KROK 4: URUCHOM TRENOWANIE
@@ -121,7 +121,7 @@ def load_model():
             
             # KROK 5: ZAŁADUJ ŚWIEŻO WYTRENOWANY MODEL
             print("📂 Ładowanie świeżo wytrenowanego modelu...")
-            model = joblib.load('../models/halfmarathon_predictor.pkl')
+            model = joblib.load('models/halfmarathon_predictor.pkl')
             metadata = {
                 'model_type': 'RandomForest (auto-trained)',
                 'r2_score': 0.95,
