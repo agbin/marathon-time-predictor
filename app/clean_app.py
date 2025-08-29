@@ -99,7 +99,6 @@ def load_model():
         st.info("🏃‍♂️ Pierwszy start - trenowanie modelu... (1-2 min)")
         
         # 🔍 DEBUG - SPRAWDŹ STRUKTURĘ KATALOGÓW NA DO
-        import os
         print(f"📂 Current working directory: {os.getcwd()}")
         print(f"📂 Files in current dir: {os.listdir('.')}")
         print(f"📂 Parent directory exists: {os.path.exists('..')}")
