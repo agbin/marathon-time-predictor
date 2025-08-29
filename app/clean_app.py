@@ -238,8 +238,12 @@ def predict_time(age, gender, pace_5km):
         # Kodowanie płci
         gender_encoded = 1 if gender == 'M' else 0
         
-        # Przewidywanie
-        features = np.array([[age, gender_encoded, pace_5km, pace_10km]])
+        # 🔧 NAPRAWA BUGA: Konwertuj minuty/km na sekundy/km (jak w treningu modelu)
+        pace_5km_seconds = pace_5km * 60  # z minut na sekundy
+        pace_10km_seconds = pace_10km * 60  # z minut na sekundy
+        
+        # Przewidywanie z poprawnymi jednostkami
+        features = np.array([[age, gender_encoded, pace_5km_seconds, pace_10km_seconds]])
         prediction_seconds = model.predict(features)[0]
         
         return prediction_seconds, None
