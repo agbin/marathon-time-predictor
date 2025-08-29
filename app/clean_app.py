@@ -16,7 +16,7 @@ import os
 import re
 
 # Ładowanie zmiennych środowiskowych - TYLKO JEDEN .ENV!
-load_dotenv('.env')  # Wszystkie klucze (Langfuse + OpenAI) - plik w tym samym katalogu
+load_dotenv('../.env')  # Wszystkie klucze (Langfuse + OpenAI) - plik w katalogu głównym
 
 # Import Langfuse with fallback
 try:
@@ -76,11 +76,11 @@ def load_model():
     """Smart model loading - ładuje lub trenuje jeśli trzeba"""
     
     # KROK 1: SPRAWDŹ CZY MODEL ISTNIEJE
-    if os.path.exists('models/halfmarathon_predictor.pkl'):
+    if os.path.exists('../models/halfmarathon_predictor.pkl'):
         # Model istnieje - załaduj normalnie
         try:
             print("📂 Ładowanie istniejącego modelu...")
-            model = joblib.load('models/halfmarathon_predictor.pkl')
+            model = joblib.load('../models/halfmarathon_predictor.pkl')
             metadata = {
                 'model_type': 'RandomForest',
                 'r2_score': 0.95,
@@ -101,7 +101,7 @@ def load_model():
         try:
             # KROK 3: IMPORT I WYWOŁANIE TRAIN_MODEL.PY
             import sys
-            sys.path.append('notebooks')  # Dodaj ścieżkę do notebooks
+            sys.path.append('../notebooks')  # Dodaj ścieżkę do notebooks (z app/ do notebooks/)
             import train_model            # Zaimportuj nasz skrypt trenowania
             
             # KROK 4: URUCHOM TRENOWANIE
@@ -110,7 +110,7 @@ def load_model():
             
             # KROK 5: ZAŁADUJ ŚWIEŻO WYTRENOWANY MODEL
             print("📂 Ładowanie świeżo wytrenowanego modelu...")
-            model = joblib.load('models/halfmarathon_predictor.pkl')
+            model = joblib.load('../models/halfmarathon_predictor.pkl')
             metadata = {
                 'model_type': 'RandomForest (auto-trained)',
                 'r2_score': 0.95,
@@ -197,16 +197,14 @@ def parse_user_data(user_input):
         # Zakończ monitoring w Langfuse
         if generation:
             try:
-                generation.end(
-                    output=result,
-                    usage={
-                        "input_tokens": response.usage.prompt_tokens,
-                        "output_tokens": response.usage.completion_tokens,
-                        "total_tokens": response.usage.total_tokens
-                    }
-                )
-            except:
-                pass
+                # Nowa składnia Langfuse v3+ - bez parametru output
+                generation.end()
+                # FLUSH - wymuś wysłanie trace do dashboardu
+                if langfuse_client:
+                    langfuse_client.flush()
+                    print("🚀 Langfuse trace wysłany (flush)")
+            except Exception as flush_error:
+                print(f"⚠️ Błąd flush Langfuse: {flush_error}")
         
         # DEBUGGING - sprawdźmy co zwraca OpenAI
         print(f"🔍 OpenAI zwróciło: '{result}'")
@@ -219,10 +217,12 @@ def parse_user_data(user_input):
         # Bezpieczne zakończenie monitoringu Langfuse
         try:
             if generation:
-                generation.end(output=f"Error: {str(e)}")
-        except:
-            # Ignoruj błędy Langfuse
-            pass
+                generation.end()  # Nowa składnia - bez parametrów
+                # FLUSH nawet przy błędzie
+                if langfuse_client:
+                    langfuse_client.flush()
+        except Exception as flush_error:
+            print(f"⚠️ Błąd flush Langfuse (error): {flush_error}")
         return f"Błąd parsowania: {e}"
 
 def predict_time(age, gender, pace_5km):
@@ -453,7 +453,7 @@ def main():
     # 🎨 OBRAZEK NA KOŃCU - zawsze widoczny
     st.markdown("---")
     try:
-        st.image("app/images/running_legs.jpg", use_container_width=True, caption="Energia biegu! 🏃‍♂️💨")
+        st.image("images/running_legs.jpg", use_container_width=True, caption="Energia biegu! 🏃‍♂️💨")
     except:
         pass
 
