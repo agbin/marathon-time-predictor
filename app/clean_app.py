@@ -98,6 +98,18 @@ def load_model():
         print("🏃‍♂️ Model nie istnieje - trenowanie nowego modelu...")
         st.info("🏃‍♂️ Pierwszy start - trenowanie modelu... (1-2 min)")
         
+        # 🔍 DEBUG - SPRAWDŹ STRUKTURĘ KATALOGÓW NA DO
+        import os
+        print(f"📂 Current working directory: {os.getcwd()}")
+        print(f"📂 Files in current dir: {os.listdir('.')}")
+        print(f"📂 Parent directory exists: {os.path.exists('..')}")
+        if os.path.exists('..'):
+            print(f"📂 Files in parent dir: {os.listdir('..')}")
+        print(f"📂 Notebooks path exists: {os.path.exists('../notebooks')}")
+        if os.path.exists('../notebooks'):
+            print(f"📂 Files in notebooks: {os.listdir('../notebooks')}")
+        print(f"📂 train_model.py exists: {os.path.exists('../notebooks/train_model.py')}")
+        
         try:
             # KROK 3: IMPORT I WYWOŁANIE TRAIN_MODEL.PY
             import sys
